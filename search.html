@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tìm phòng trọ - Phòng Trọ 24/7</title>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="src/styles/search.css" rel="stylesheet">
+
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="index.html" class="flex items-center">
+                <i data-feather="home" class="text-blue-600 mr-2"></i>
+                <span class="text-xl font-bold text-blue-600">Phòng Trọ 24/7</span>
+            </a>
+            <nav class="hidden md:flex space-x-8">
+                <a href="index.html" class="text-gray-600 hover:text-blue-600">Trang chủ</a>
+                <a href="search.html" class="text-blue-600 font-medium">Tìm phòng</a>
+                <a href="post.html" class="text-gray-600 hover:text-blue-600">Đăng tin</a>
+                <a href="account.html" class="text-gray-600 hover:text-blue-600">Tài khoản</a>
+            </nav>
+            <div class="flex items-center space-x-4">
+                <a href="auth.html" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">Đăng nhập</a>
+                <button class="md:hidden" id="mobile-menu-button">
+                    <i data-feather="menu"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile menu -->
+        <div class="md:hidden hidden bg-white shadow-lg" id="mobile-menu">
+            <div class="px-4 py-3 flex flex-col space-y-3">
+                <a href="index.html" class="text-gray-600 hover:text-blue-600">Trang chủ</a>
+                <a href="search.html" class="text-blue-600 font-medium">Tìm phòng</a>
+                <a href="post.html" class="text-gray-600 hover:text-blue-600">Đăng tin</a>
+                <a href="account.html" class="text-gray-600 hover:text-blue-600">Tài khoản</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Breadcrumb -->
+    <nav class="bg-white py-3 border-b">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center space-x-2 text-sm text-gray-600">
+                <a href="index.html" class="hover:text-blue-600">Trang chủ</a>
+                <i data-feather="chevron-right" class="w-4 h-4"></i>
+                <span class="text-blue-600">Tìm phòng</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Search Header -->
+    <section class="bg-white py-6 border-b">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row gap-4 items-center">
+                <!-- Search Input -->
+                <div class="flex-1 relative">
+                    <i data-feather="search" class="absolute left-3 top-3 text-gray-400 w-5 h-5"></i>
+                    <input 
+                        type="text" 
+                        id="searchKeyword" 
+                        placeholder="Tìm theo địa điểm, quận, tên đường..." 
+                        class="pl-10 w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                </div>
+                
+                <!-- Quick Filters -->
+                <div class="flex gap-3 flex-wrap">
+                    <select id="quickCity" class="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Tất cả tỉnh/thành</option>
+                        <option value="ho-chi-minh">TP.HCM</option>
+                        <option value="ha-noi">Hà Nội</option>
+                        <option value="da-nang">Đà Nẵng</option>
+                        <option value="can-tho">Cần Thơ</option>
+                        <option value="hai-phong">Hải Phòng</option>
+                    </select>
+                    
+                    <select id="quickPrice" class="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Tất cả giá</option>
+                        <option value="0-2">Dưới 2 triệu</option>
+                        <option value="2-4">2-4 triệu</option>
+                        <option value="4-6">4-6 triệu</option>
+                        <option value="6-10">6-10 triệu</option>
+                        <option value="10+">Trên 10 triệu</option>
+                    </select>
+                    
+                    <button onclick="performSearch()" class="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition flex items-center">
+                        <i data-feather="search" class="mr-2 w-4 h-4"></i>
+                        Tìm kiếm
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-6">
+        <div class="flex flex-col lg:flex-row gap-6">
+            <!-- Filter Overlay (Mobile) -->
+            <div id="filterOverlay" class="filter-overlay" onclick="closeFilterSidebar()"></div>
+
+            <!-- Sidebar Filters -->
+            <div id="filterSidebar" class="filter-sidebar mobile-hidden lg:transform-none lg:relative lg:w-80 bg-white rounded-lg shadow-md p-6 h-fit">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-xl font-bold">Bộ lọc tìm kiếm</h2>
+                    <button class="lg:hidden" onclick="closeFilterSidebar()">
+                        <i data-feather="x" class="w-6 h-6"></i>
+                    </button>
+                </div>
+
+                <!-- Location Filter -->
+                <div class="mb-6">
+                    <h3 class="font-medium mb-3">Địa điểm</h3>
+                    <div class="space-y-2">
+                        <select id="filterCity" class="w-full p-2 border border-gray-300 rounded-md">
+                            <option value="">Chọn tỉnh/thành</option>
+                            <option value="an-giang">An Giang</option>
+                            <option value="ba-ria-vung-tau">Bà Rịa - Vũng Tàu</option>
+                            <option value="bac-giang">Bắc Giang</option>
+                            <option value="bac-kan">Bắc Kạn</option>
+                            <option value="bac-lieu">Bạc Liêu</option>
+                            <option value="bac-ninh">Bắc Ninh</option>
+                            <option value="ben-tre">Bến Tre</option>
+                            <option value="binh-dinh">Bình Định</option>
+                            <option value="binh-duong">Bình Dương</option>
+                            <option value="binh-phuoc">Bình Phước</option>
+                            <option value="binh-thuan">Bình Thuận</option>
+                            <option value="ca-mau">Cà Mau</option>
+                            <option value="can-tho">Cần Thơ</option>
+                            <option value="cao-bang">Cao Bằng</option>
+                            <option value="da-nang">Đà Nẵng</option>
+                            <option value="dak-lak">Đắk Lắk</option>
+                            <option value="dak-nong">Đắk Nông</option>
+                            <option value="dien-bien">Điện Biên</option>
+                            <option value="dong-nai">Đồng Nai</option>
+                            <option value="dong-thap">Đồng Tháp</option>
+                            <option value="gia-lai">Gia Lai</option>
+                            <option value="ha-giang">Hà Giang</option>
+                            <option value="ha-nam">Hà Nam</option>
+                            <option value="ha-noi">Hà Nội</option>
+                            <option value="ha-tinh">Hà Tĩnh</option>
+                            <option value="hai-duong">Hải Dương</option>
+                            <option value="hai-phong">Hải Phòng</option>
+                            <option value="hau-giang">Hậu Giang</option>
+                            <option value="ho-chi-minh">TP. Hồ Chí Minh</option>
+                            <option value="hoa-binh">Hòa Bình</option>
+                            <option value="hung-yen">Hưng Yên</option>
+                            <option value="khanh-hoa">Khánh Hòa</option>
+                            <option value="kien-giang">Kiên Giang</option>
+                            <option value="kon-tum">Kon Tum</option>
+                            <option value="lai-chau">Lai Châu</option>
+                            <option value="lam-dong">Lâm Đồng</option>
+                            <option value="lang-son">Lạng Sơn</option>
+                            <option value="lao-cai">Lào Cai</option>
+                            <option value="long-an">Long An</option>
+                            <option value="nam-dinh">Nam Định</option>
+                            <option value="nghe-an">Nghệ An</option>
+                            <option value="ninh-binh">Ninh Bình</option>
+                            <option value="ninh-thuan">Ninh Thuận</option>
+                            <option value="phu-tho">Phú Thọ</option>
+                            <option value="phu-yen">Phú Yên</option>
+                            <option value="quang-binh">Quảng Bình</option>
+                            <option value="quang-nam">Quảng Nam</option>
+                            <option value="quang-ngai">Quảng Ngãi</option>
+                            <option value="quang-ninh">Quảng Ninh</option>
+                            <option value="quang-tri">Quảng Trị</option>
+                            <option value="soc-trang">Sóc Trăng</option>
+                            <option value="son-la">Sơn La</option>
+                            <option value="tay-ninh">Tây Ninh</option>
+                            <option value="thai-binh">Thái Bình</option>
+                            <option value="thai-nguyen">Thái Nguyên</option>
+                            <option value="thanh-hoa">Thanh Hóa</option>
+                            <option value="thua-thien-hue">Thừa Thiên Huế</option>
+                            <option value="tien-giang">Tiền Giang</option>
+                            <option value="tra-vinh">Trà Vinh</option>
+                            <option value="tuyen-quang">Tuyên Quang</option>
+                            <option value="vinh-long">Vĩnh Long</option>
+                            <option value="vinh-phuc">Vĩnh Phúc</option>
+                            <option value="yen-bai">Yên Bái</option>
+                        </select>
+                        <select id="filterDistrict" class="w-full p-2 border border-gray-300 rounded-md" disabled>
+                            <option value="">Chọn quận/huyện</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Price Range Filter -->
+                <div class="mb-6">
+                    <h3 class="font-medium mb-3">Khoảng giá</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-600">0 đ</span>
+                            <span class="text-sm text-gray-600">20+ triệu</span>
+                        </div>
+                        <input 
+                            type="range" 
+                            id="priceRange" 
+                            class="range-slider w-full" 
+                            min="0" 
+                            max="20" 
+                            value="20" 
+                            oninput="updatePriceDisplay(this.value)"
+                        >
+                        <div class="text-center">
+                            <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium" id="priceDisplay">Tất cả mức giá</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Room Type Filter -->
+                <div class="mb-6">
+                    <h3 class="font-medium mb-3">Loại phòng</h3>
+                    <div class="space-y-2">
+                        <label class="flex items-center">
+                            <input type="checkbox" name="roomType" value="room" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 mr-2">
+                            <span>Phòng trọ</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" name="roomType" value="apartment" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 mr-2">
+                            <span>Chung cư mini</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" name="roomType" value="house" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 mr-2">
+                            <span>Nhà nguyên căn</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" name="roomType" value="shared" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 mr-2">
+                            <span>Phòng ở ghép</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" name="roomType" value="studio" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 mr-2">
+                            <span>Studio</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Area Filter -->
+                <div class="mb-6">
+                    <h3 class="font-medium mb-3">Diện tích</h3>
+                    <div class="space-y-2">
+                        <label class="flex items-center">
+                            <input type="radio" name="area" value="0-20" class="text-blue-600 focus:ring-blue-500 mr-2">
+                            <span>Dưới 20m²</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="radio" name="area" value="20-30" class="text-blue-600 focus:ring-blue-500 mr-2">
+                            <span>20m² - 30m²</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="radio" name="area" value="30-50" class="text-blue-600 focus:ring-blue-500 mr-2">
+                            <span>30m² - 50m²</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="radio" name="area" value="50+" class="text-blue-600 focus:ring-blue-500 mr-2">
+                            <span>Trên 50m²</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Amenities Filter -->
+                <div class="mb-6">
+                    <h3 class="font-medium mb-3">Tiện ích</h3>
+                    <div class="space-y-2">
+                        <label class="flex items-center">
+                            <input type="checkbox" name="amenities" value="wifi" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 mr-2">
+                            <i data-feather="wifi" class="w-4 h-4 mr-2"></i>
+                            <span>WiFi</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" name="amenities" value="ac" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 mr-2">
+                            <i data-feather="wind" class="w-4 h-4 mr-2"></i>
+                            <span>Điều hòa</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" name="amenities" value="parking" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 mr-2">
+                            <i data-feather="truck" class="w-4 h-4 mr-2"></i>
+                            <span>Chỗ để xe</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" name="amenities" value="kitchen" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 mr-2">
+                            <i data-feather="home" class="w-4 h-4 mr-2"></i>
+                            <span>Bếp</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" name="amenities" value="laundry" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 mr-2">
+                            <i data-feather="droplet" class="w-4 h-4 mr-2"></i>
+                            <span>Máy giặt</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" name="amenities" value="security" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 mr-2">
+                            <i data-feather="shield" class="w-4 h-4 mr-2"></i>
+                            <span>An ninh 24/7</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Filter Actions -->
+                <div class="space-y-3">
+                    <button onclick="applyFilters()" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition">
+                        Áp dụng bộ lọc
+                    </button>
+                    <button onclick="clearFilters()" class="w-full border border-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-50 transition">
+                        Xóa bộ lọc
+                    </button>
+                </div>
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="flex-1">
+                <!-- Search Results Header -->
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center space-x-4">
+                        <button class="lg:hidden bg-blue-600 text-white px-4 py-2 rounded-md" onclick="openFilterSidebar()">
+                            <i data-feather="sliders" class="w-4 h-4 mr-2 inline"></i>
+                            Bộ lọc
+                        </button>
+                        <div>
+                            <h1 class="text-2xl font-bold">Tìm thấy <span id="resultsCount">1,234</span> phòng trọ</h1>
+                            <p class="text-gray-600" id="searchSummary">Tất cả khu vực • Tất cả mức giá</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center space-x-3">
+                        <select id="sortBy" class="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" onchange="sortResults()">
+                            <option value="newest">Mới nhất</option>
+                            <option value="price-asc">Giá thấp đến cao</option>
+                            <option value="price-desc">Giá cao đến thấp</option>
+                            <option value="area-desc">Diện tích lớn nhất</option>
+                            <option value="popular">Phổ biến nhất</option>
+                        </select>
+                        
+                        <div class="flex border border-gray-300 rounded-md">
+                            <button id="gridView" class="p-2 bg-blue-600 text-white rounded-l-md" onclick="changeView('grid')">
+                                <i data-feather="grid" class="w-4 h-4"></i>
+                            </button>
+                            <button id="listView" class="p-2 text-gray-600 rounded-r-md border-l" onclick="changeView('list')">
+                                <i data-feather="list" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Loading State -->
+                <div id="loadingState" class="hidden">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="bg-white rounded-lg overflow-hidden shadow-md">
+                            <div class="loading-skeleton h-48"></div>
+                            <div class="p-4">
+                                <div class="loading-skeleton h-4 mb-2 rounded"></div>
+                                <div class="loading-skeleton h-3 mb-3 w-3/4 rounded"></div>
+                                <div class="loading-skeleton h-3 w-1/2 rounded"></div>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-lg overflow-hidden shadow-md">
+                            <div class="loading-skeleton h-48"></div>
+                            <div class="p-4">
+                                <div class="loading-skeleton h-4 mb-2 rounded"></div>
+                                <div class="loading-skeleton h-3 mb-3 w-3/4 rounded"></div>
+                                <div class="loading-skeleton h-3 w-1/2 rounded"></div>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-lg overflow-hidden shadow-md">
+                            <div class="loading-skeleton h-48"></div>
+                            <div class="p-4">
+                                <div class="loading-skeleton h-4 mb-2 rounded"></div>
+                                <div class="loading-skeleton h-3 mb-3 w-3/4 rounded"></div>
+                                <div class="loading-skeleton h-3 w-1/2 rounded"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Search Results Grid -->
+                <div id="resultsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Results will be populated here -->
+                </div>
+
+                <!-- Search Results List (Hidden by default) -->
+                <div id="resultsList" class="hidden space-y-4">
+                    <!-- List view results will be populated here -->
+                </div>
+
+                <!-- No Results -->
+                <div id="noResults" class="hidden text-center py-12">
+                    <div class="max-w-md mx-auto">
+                        <i data-feather="search" class="w-16 h-16 text-gray-400 mx-auto mb-4"></i>
+                        <h3 class="text-xl font-medium text-gray-900 mb-2">Không tìm thấy kết quả</h3>
+                        <p class="text-gray-600 mb-6">Hãy thử thay đổi bộ lọc hoặc từ khóa tìm kiếm khác</p>
+                        <button onclick="clearFilters()" class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
+                            Xóa bộ lọc
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <div id="pagination" class="mt-12 flex justify-center">
+                    <nav class="flex items-center space-x-1">
+                        <button class="px-3 py-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md">
+                            <i data-feather="chevron-left" class="w-4 h-4"></i>
+                        </button>
+                        <button class="px-4 py-2 bg-blue-600 text-white rounded-md">1</button>
+                        <button class="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-md">2</button>
+                        <button class="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-md">3</button>
+                        <span class="px-3 py-2 text-gray-500">...</span>
+                        <button class="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-md">10</button>
+                        <button class="px-3 py-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md">
+                            <i data-feather="chevron-right" class="w-4 h-4"></i>
+                        </button>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12 mt-16">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4 flex items-center">
+                        <i data-feather="home" class="mr-2"></i> Phòng Trọ 24/7
+                    </h3>
+                    <p class="text-gray-400">Kết nối người thuê và chủ phòng trọ một cách nhanh chóng, tiện lợi.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Về chúng tôi</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Giới thiệu</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Điều khoản</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Chính sách bảo mật</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Hỗ trợ</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Câu hỏi thường gặp</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Hướng dẫn sử dụng</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Liên hệ</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Kết nối</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="bg-gray-700 p-2 rounded-full hover:bg-blue-600 transition">
+                            <i data-feather="facebook"></i>
+                        </a>
+                        <a href="#" class="bg-gray-700 p-2 rounded-full hover:bg-pink-600 transition">
+                            <i data-feather="instagram"></i>
+                        </a>
+                        <a href="#" class="bg-gray-700 p-2 rounded-full hover:bg-blue-400 transition">
+                            <i data-feather="twitter"></i>
+                        </a>
+                        <a href="#" class="bg-gray-700 p-2 rounded-full hover:bg-red-600 transition">
+                            <i data-feather="youtube"></i>
+                        </a>
+                    </div>
+                    <div class="mt-4">
+                        <p class="text-gray-400">Hotline: 1900 1234</p>
+                        <p class="text-gray-400">Email: support@phongtro247.com</p>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>© 2023 Phòng Trọ 24/7. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src = "src/scripts/search.js"></script>
+</body>
+</html>
