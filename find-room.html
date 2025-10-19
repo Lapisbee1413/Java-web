@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tìm phòng trọ - Phòng Trọ 24/7</title>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="src/styles/common.css">
+    <link rel="stylesheet" href="src/styles/find-room.css">
+</head>
+<body class="bg-gray-50">
+    <!-- Notification Placeholder -->
+    <div id="notification-placeholder"></div>
+
+    <!-- Header Placeholder -->
+    <div id="header-placeholder"></div>0
+
+    <!-- Breadcrumb -->
+    <nav class="bg-white py-3 border-b">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center space-x-2 text-sm text-gray-600">
+                <a href="index.html" class="hover:text-blue-600">Trang chủ</a>
+                <i data-feather="chevron-right" class="w-4 h-4"></i>
+                <span class="text-blue-600">Tìm phòng trọ</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="py-8">
+        <div class="container mx-auto px-4 max-w-4xl">
+            <!-- Header Section -->
+            <div class="text-center mb-8" data-aos="fade-up">
+                <h1 class="text-3xl font-bold mb-4">Đăng tin tìm phòng trọ</h1>
+                <p class="text-gray-600">Mô tả nhu cầu của bạn để chúng tôi giúp bạn tìm phòng trọ phù hợp</p>
+            </div>
+
+            <!-- Form Container -->
+            <div class="bg-white rounded-lg shadow-lg p-6 md:p-8" data-aos="fade-up" data-aos-delay="100">
+                <form id="findRoomForm" class="space-y-6">
+                    <!-- Personal Information -->
+                    <div class="mb-8">
+                        <h2 class="text-xl font-bold mb-6 flex items-center">
+                            <i data-feather="user" class="mr-2 text-blue-600"></i>
+                            Thông tin cá nhân
+                        </h2>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Full Name -->
+                            <div>
+                                <div class="floating-label">
+                                    <input type="text" id="fullName" name="fullName" placeholder=" " class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                                    <label for="fullName">Họ và tên *</label>
+                                </div>
+                            </div>
+
+                            <!-- Phone -->
+                            <div>
+                                <div class="floating-label">
+                                    <input type="tel" id="phone" name="phone" placeholder=" " class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                                    <label for="phone">Số điện thoại *</label>
+                                </div>
+                            </div>
+
+                            <!-- Email -->
+                            <div>
+                                <div class="floating-label">
+                                    <input type="email" id="email" name="email" placeholder=" " class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <label for="email">Email</label>
+                                </div>
+                            </div>
+
+                            <!-- Age -->
+                            <div>
+                                <div class="floating-label">
+                                    <input type="number" id="age" name="age" placeholder=" " class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" min="18" max="100">
+                                    <label for="age">Tuổi</label>
+                                </div>
+                            </div>
+
+                            <!-- Gender -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Giới tính</label>
+                                <select id="gender" name="gender" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="">Chọn giới tính</option>
+                                    <option value="male">Nam</option>
+                                    <option value="female">Nữ</option>
+                                    <option value="other">Khác</option>
+                                </select>
+                            </div>
+
+                            <!-- Occupation -->
+                            <div>
+                                <div class="floating-label">
+                                    <input type="text" id="occupation" name="occupation" placeholder=" " class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <label for="occupation">Nghề nghiệp</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Room Requirements -->
+                    <div class="mb-8">
+                        <h2 class="text-xl font-bold mb-6 flex items-center">
+                            <i data-feather="home" class="mr-2 text-blue-600"></i>
+                            Yêu cầu về phòng trọ
+                        </h2>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Room Type -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Loại phòng mong muốn *</label>
+                                <select id="roomType" name="roomType" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                                    <option value="">Chọn loại phòng</option>
+                                    <option value="single">Phòng đơn</option>
+                                    <option value="shared">Phòng ở ghép</option>
+                                    <option value="apartment">Chung cư mini</option>
+                                    <option value="house">Nhà nguyên căn</option>
+                                    <option value="studio">Studio</option>
+                                </select>
+                            </div>
+
+                            <!-- Budget -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Ngân sách (VNĐ/tháng) *</label>
+                                <select id="budget" name="budget" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                                    <option value="">Chọn mức giá</option>
+                                    <option value="1">Dưới 2 triệu</option>
+                                    <option value="2">2 - 4 triệu</option>
+                                    <option value="3">4 - 6 triệu</option>
+                                    <option value="4">6 - 10 triệu</option>
+                                    <option value="5">Trên 10 triệu</option>
+                                </select>
+                            </div>
+
+                            <!-- Area -->
+                            <div>
+                                <div class="floating-label">
+                                    <input type="number" id="area" name="area" placeholder=" " class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <label for="area">Diện tích mong muốn (m²)</label>
+                                </div>
+                            </div>
+
+                            <!-- Move-in Date -->
+                            <div>
+                                <div class="floating-label">
+                                    <input type="date" id="moveInDate" name="moveInDate" placeholder=" " class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <label for="moveInDate">Ngày muốn chuyển vào</label>
+                                </div>
+                            </div>
+
+                            <!-- City -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Tỉnh/Thành phố *</label>
+                                <select id="city" name="city" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                                    <option value="">Chọn tỉnh/thành phố</option>
+                                    <option value="ho-chi-minh">TP. Hồ Chí Minh</option>
+                                    <option value="ha-noi">Hà Nội</option>
+                                    <option value="da-nang">Đà Nẵng</option>
+                                    <option value="can-tho">Cần Thơ</option>
+                                    <option value="hai-phong">Hải Phòng</option>
+                                    <option value="other">Khác</option>
+                                </select>
+                            </div>
+
+                            <!-- District -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Quận/Huyện *</label>
+                                <select id="district" name="district" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                                    <option value="">Chọn quận/huyện</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Preferred Areas -->
+                        <div class="mt-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Khu vực ưu tiên</label>
+                            <textarea id="preferredAreas" name="preferredAreas" rows="3" placeholder="VD: Gần trường ĐH Bách Khoa, khu vực Quận 1, 3..." class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-vertical"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Amenities & Preferences -->
+                    <div class="mb-8">
+                        <h2 class="text-xl font-bold mb-6 flex items-center">
+                            <i data-feather="star" class="mr-2 text-blue-600"></i>
+                            Tiện ích & Sở thích
+                        </h2>
+
+                        <!-- Required Amenities -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-3">Tiện ích bắt buộc</label>
+                            <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                                <label class="flex items-center space-x-2 cursor-pointer">
+                                    <input type="checkbox" name="requiredAmenities" value="wifi" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                    <i data-feather="wifi" class="w-4 h-4 text-gray-600"></i>
+                                    <span>Wifi miễn phí</span>
+                                </label>
+                                <label class="flex items-center space-x-2 cursor-pointer">
+                                    <input type="checkbox" name="requiredAmenities" value="parking" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                    <i data-feather="truck" class="w-4 h-4 text-gray-600"></i>
+                                    <span>Chỗ để xe</span>
+                                </label>
+                                <label class="flex items-center space-x-2 cursor-pointer">
+                                    <input type="checkbox" name="requiredAmenities" value="ac" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                    <i data-feather="wind" class="w-4 h-4 text-gray-600"></i>
+                                    <span>Điều hòa</span>
+                                </label>
+                                <label class="flex items-center space-x-2 cursor-pointer">
+                                    <input type="checkbox" name="requiredAmenities" value="kitchen" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                    <i data-feather="home" class="w-4 h-4 text-gray-600"></i>
+                                    <span>Bếp riêng</span>
+                                </label>
+                                <label class="flex items-center space-x-2 cursor-pointer">
+                                    <input type="checkbox" name="requiredAmenities" value="laundry" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                    <i data-feather="droplet" class="w-4 h-4 text-gray-600"></i>
+                                    <span>Máy giặt</span>
+                                </label>
+                                <label class="flex items-center space-x-2 cursor-pointer">
+                                    <input type="checkbox" name="requiredAmenities" value="security" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                    <i data-feather="shield" class="w-4 h-4 text-gray-600"></i>
+                                    <span>An ninh 24/7</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Preferred Amenities -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-3">Tiện ích mong muốn</label>
+                            <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                                <label class="flex items-center space-x-2 cursor-pointer">
+                                    <input type="checkbox" name="preferredAmenities" value="tv" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                    <i data-feather="tv" class="w-4 h-4 text-gray-600"></i>
+                                    <span>TV</span>
+                                </label>
+                                <label class="flex items-center space-x-2 cursor-pointer">
+                                    <input type="checkbox" name="preferredAmenities" value="balcony" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                    <i data-feather="sun" class="w-4 h-4 text-gray-600"></i>
+                                    <span>Ban công</span>
+                                </label>
+                                <label class="flex items-center space-x-2 cursor-pointer">
+                                    <input type="checkbox" name="preferredAmenities" value="elevator" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                    <i data-feather="arrow-up" class="w-4 h-4 text-gray-600"></i>
+                                    <span>Thang máy</span>
+                                </label>
+                                <label class="flex items-center space-x-2 cursor-pointer">
+                                    <input type="checkbox" name="preferredAmenities" value="gym" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                    <i data-feather="activity" class="w-4 h-4 text-gray-600"></i>
+                                    <span>Phòng gym</span>
+                                </label>
+                                <label class="flex items-center space-x-2 cursor-pointer">
+                                    <input type="checkbox" name="preferredAmenities" value="pool" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                    <i data-feather="droplet" class="w-4 h-4 text-gray-600"></i>
+                                    <span>Hồ bơi</span>
+                                </label>
+                                <label class="flex items-center space-x-2 cursor-pointer">
+                                    <input type="checkbox" name="preferredAmenities" value="garden" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                    <i data-feather="tree" class="w-4 h-4 text-gray-600"></i>
+                                    <span>Sân vườn</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Additional Information -->
+                    <div class="mb-8">
+                        <h2 class="text-xl font-bold mb-6 flex items-center">
+                            <i data-feather="file-text" class="mr-2 text-blue-600"></i>
+                            Thông tin bổ sung
+                        </h2>
+
+                        <!-- Description -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Mô tả chi tiết nhu cầu *</label>
+                            <textarea id="description" name="description" rows="6" placeholder="Mô tả chi tiết về nhu cầu của bạn, sở thích, yêu cầu đặc biệt..." class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-vertical" required></textarea>
+                            <p class="text-sm text-gray-500 mt-1">Mô tả càng chi tiết sẽ giúp chúng tôi tìm phòng phù hợp hơn</p>
+                        </div>
+
+                        <!-- Living Preferences -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-3">Sở thích sinh hoạt</label>
+                            <div class="space-y-2">
+                                <label class="flex items-center space-x-2">
+                                    <input type="checkbox" name="livingPreferences" value="quiet" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                    <span>Yêu thích không gian yên tĩnh</span>
+                                </label>
+                                <label class="flex items-center space-x-2">
+                                    <input type="checkbox" name="livingPreferences" value="social" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                    <span>Thích giao lưu, kết bạn</span>
+                                </label>
+                                <label class="flex items-center space-x-2">
+                                    <input type="checkbox" name="livingPreferences" value="pet-friendly" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                    <span>Thân thiện với thú cưng</span>
+                                </label>
+                                <label class="flex items-center space-x-2">
+                                    <input type="checkbox" name="livingPreferences" value="smoke-friendly" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                    <span>Cho phép hút thuốc</span>
+                                </label>
+                                <label class="flex items-center space-x-2">
+                                    <input type="checkbox" name="livingPreferences" value="party-friendly" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                    <span>Cho phép tổ chức tiệc tùng</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Contact Preferences -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-3">Cách thức liên hệ ưa thích</label>
+                            <div class="space-y-2">
+                                <label class="flex items-center space-x-2">
+                                    <input type="checkbox" name="contactMethods" value="phone" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500" checked>
+                                    <span>Gọi điện thoại</span>
+                                </label>
+                                <label class="flex items-center space-x-2">
+                                    <input type="checkbox" name="contactMethods" value="sms" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                    <span>Nhắn tin SMS</span>
+                                </label>
+                                <label class="flex items-center space-x-2">
+                                    <input type="checkbox" name="contactMethods" value="email" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                    <span>Email</span>
+                                </label>
+                                <label class="flex items-center space-x-2">
+                                    <input type="checkbox" name="contactMethods" value="zalo" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                    <span>Zalo</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Terms & Submit -->
+                    <div class="mb-8">
+                        <label class="flex items-start space-x-2">
+                            <input type="checkbox" id="agreeTerms" name="agreeTerms" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 mt-1" required>
+                            <span class="text-sm text-gray-600">
+                                Tôi đồng ý với 
+                                <a href="#" class="text-blue-600 hover:underline">Điều khoản sử dụng</a> 
+                                và 
+                                <a href="#" class="text-blue-600 hover:underline">Chính sách bảo mật</a> 
+                                của Phòng Trọ 24/7
+                            </span>
+                        </label>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="text-center">
+                        <button type="submit" class="px-8 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition flex items-center font-medium mx-auto">
+                            <i data-feather="send" class="mr-2 w-5 h-5"></i>
+                            Đăng tin tìm phòng
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay hidden">
+        <div class="bg-white rounded-lg p-6 text-center">
+            <div class="spinner mx-auto mb-4"></div>
+            <p class="text-gray-600">Đang xử lý tin đăng của bạn...</p>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg p-8 max-w-md mx-4 text-center">
+            <div class="success-message text-white p-4 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                <i data-feather="check" class="w-8 h-8"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-4">Đăng tin thành công!</h3>
+            <p class="text-gray-600 mb-6">Tin đăng tìm phòng của bạn đã được gửi lên hệ thống. Chúng tôi sẽ liên hệ với bạn trong thời gian sớm nhất.</p>
+            <div class="flex space-x-4">
+                <button onclick="window.location.href='index.html'" class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition">
+                    Về trang chủ
+                </button>
+                <button onclick="window.location.reload()" class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
+                    Đăng tin khác
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Placeholder -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Custom JavaScript -->
+    <script src="src/scripts/common.js"></script>
+    <script src="src/scripts/components.js"></script>
+    <script src="src/scripts/find-room.js"></script>
+    
+</body>
+</html>
